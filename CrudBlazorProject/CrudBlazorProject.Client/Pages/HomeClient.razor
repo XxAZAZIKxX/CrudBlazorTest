@@ -1,0 +1,38 @@
+﻿@page "/home"
+@inject ITaskService TaskService
+@rendermode @(new InteractiveAutoRenderMode())
+
+<PageTitle>Client Home</PageTitle>
+
+
+@if (Tasks is null)
+{
+    <h2>Loading...</h2>
+}
+else if (Tasks.Length is 0)
+{
+    <h2>Is no tasks in here.</h2>
+}
+else
+{
+    <ul>
+        @foreach (var task in Tasks)
+        {
+            <li>@task.Name</li>
+        }
+    </ul>
+}
+
+<p>@TaskService?.GetType()?.FullName</p>
+
+@code
+{
+
+    public TaskEntity[]? Tasks { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(TimeSpan.FromSeconds(2));
+        Tasks = await TaskService.GetAllTasks();
+    }
+}
